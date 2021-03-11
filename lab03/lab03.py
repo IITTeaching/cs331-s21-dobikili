@@ -22,7 +22,7 @@ def mysort(lst: List[T], compare: Callable[[T, T], int]) -> List[T]:
         k = i
         for j in range(i):
             if compare (lst[k], lst [k-1]) == -1:
-                lst[a], lst [k-1] = lst [k-1], lst [k]
+                lst[k], lst [k-1] = lst [k-1], lst [k]
                 k-=1
             else:
                 break
@@ -142,7 +142,7 @@ class PrefixSearcher():
                 strs += (document[i : i +j+ 1])
                 self.list.append(strs)
         compare = lambda x,y: 0 if x == y else (-1 if x < y else 1)
-        mysort(self.list,compare)
+        mysort(self.list, compare)
 
     def search(self, q):
         """
@@ -154,7 +154,7 @@ class PrefixSearcher():
         OutofBoundsError = len(q)> self.k
         try:
             compare = lambda x,y: 0 if x == y else (-1 if x < y else 1)
-            if(mybinsearch(selfl.list,q,compare) == -1):
+            if(mybinsearch(self.list,q,compare) == -1):
                 return False
             else:
                 return True
@@ -186,7 +186,7 @@ def test2_1():
 def test2_2():
     print("\t-search in Moby Dick")
     tc = unittest.TestCase()
-    md_url = 'https://www.gutenberg.org/files/2701/2701-0.txt'
+    md_url = 'http://www.gutenberg.org/files/2701/2701-0.txt'
     md_text = urllib.request.urlopen(md_url).read().decode()
     p = PrefixSearcher(md_text[0:1000],4)
     tc.assertTrue(p.search("Moby"))
@@ -235,7 +235,7 @@ class SuffixArray():
             elif(x_suffix < y):
                 return -1
             
-        results. append(mybinsearch(self.sa, searchstr, compare))
+        results.append(mybinsearch(self.sa, searchstr, compare))
         return results
 
     def contains(self, searchstr: str):
