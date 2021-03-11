@@ -47,7 +47,7 @@ def mybinsearch(lst: List[T], elem: S, compare: Callable[[T, S], int]) -> int:
             return mid
         elif compare(lst[mid], elem) == 1:
             end = mid -1
-            
+
     return -1
 
 class Student():
@@ -203,10 +203,10 @@ class SuffixArray():
         """
         self.sa = []
         self.document = document
-        
+
         for x in range(len(self.document)):
             self.sa.append(x)
-            
+
         def compare(x,y):
             x_suffix = self.document[x:]
             y_suffix = self.document[y:]
@@ -224,17 +224,17 @@ class SuffixArray():
         Returns all the positions of searchstr in the documented indexed by the suffix array.
         """
         results = []
-        
+
         def compare(x,y):
             x_suffix = self.document[x:]
-            
+
             if(y == x_suffix[:len(y)]):
                 return 0
             elif(x_suffix > y):
                 return 1
             elif(x_suffix < y):
                 return -1
-            
+
         results.append(mybinsearch(self.sa, searchstr, compare))
         return results
 
@@ -244,14 +244,14 @@ class SuffixArray():
         """
         def compare(x,y):
             x_suffix = self.document[x:]
-            
+
             if(y == x_suffix[:len(y)]):
                 return 0
             elif(x_suffix > y):
                 return 1
             elif(x_suffix < y):
                 return -1
-        
+
         return mybinsearch(self.sa, searchstr, compare)!= -1
 
 # 40 Points
@@ -282,9 +282,10 @@ def test3_2():
     md_url = 'https://www.gutenberg.org/files/2701/2701-0.txt'
     md_text = urllib.request.urlopen(md_url).read().decode()
     s = SuffixArray(md_text[0:1000])
-    tc.assertTrue(s.contains("Moby Dick"))
+    tc.assertTrue(s.contains("Moby-Dick"))
     tc.assertTrue(s.contains("Herman Melville"))
-    tc.assertEqual(s.positions("Moby Dick"), [427])
+    posset = set(s.positions("Moby-Dick"))
+    tc.assertTrue(posset == {355} or posset == {355, 356}  or posset == {356})
 
 
 #################################################################################
