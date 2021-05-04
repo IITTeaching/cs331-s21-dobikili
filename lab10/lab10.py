@@ -15,6 +15,9 @@ class AVLTree:
 
         def rotate_left(self):
             ### BEGIN SOLUTION
+            node = self.right
+            self.val, node.val = node.val, self.val
+            self.right, node.right, self.left, node.left = node.right, node.left, node, self.left
             ### END SOLUTION
 
         @staticmethod
@@ -31,16 +34,79 @@ class AVLTree:
     @staticmethod
     def rebalance(t):
         ### BEGIN SOLUTION
+        if AVLTree.Node.height(t.left) > AVLTree.Node.height(t.right):
+            if AVLTree.Node.height(t.left.left) >= AVLTree.Node.height(t.left.right):
+                t.rotate_right()
+            else:
+                
+                t.left.rotate_left()
+                t.rotate_right()
+        else:
+            if AVLTree.Node.height(t.right.right) >= AVLTree.Node.height(t.right.left):
+                t.rotate_left()
+        
+            else:
+                
+                t.right.rotate_right()
+                t.rotate_left()
         ### END SOLUTION
 
     def add(self, val):
         assert(val not in self)
         ### BEGIN SOLUTION
+        def add_rec(n):
+            if not n:
+                return AVLTree.Node(val)
+            elif val < n.val:
+                n.left = add_rec(n.left)
+            else:
+                n.right = add_rec(n.right)            
+            if abs(AVLTree.Node.height(n.left) - AVLTree.Node.height(n.right)) >= 2:
+                AVLTree.rebalance(n)
+            return n
+        
+        self.root = add_rec(self.root)
+        self.size += 1
         ### END SOLUTION
 
     def __delitem__(self, val):
         assert(val in self)
         ### BEGIN SOLUTION
+        def delitem_rec(node):
+            if val < node.val:
+                node.left = delitem_rec(node.left)
+            elif val > node.val:
+                node.right = delitem_rec(node.right)
+            else:
+                if not node.left and not node.right:
+                    return None
+                elif node.left and not node.right:
+                    return node.left
+                elif node.right and not node.left:
+                    return node.right
+                else:
+                    t = node.left
+                    if not t.right:
+                        node.val = t.val
+                        node.left = t.left                        
+                    else:
+                        def del_rec(n):
+                            if n.right.right:
+                                del_rec(n.right)
+                            else:
+                                y = n.right
+                                n.right = y.left
+                                node.val = y.val
+                            if abs(AVLTree.Node.height(n.left) - AVLTree.Node.height(n.right)) >= 2:
+                                AVLTree.rebalance(n)
+                        n = t
+                        del_rec(n)
+            if abs(AVLTree.Node.height(node.left) - AVLTree.Node.height(node.right)) >= 2:
+                AVLTree.rebalance(node)
+            return node
+       
+        self.root = delitem_rec(self.root)
+        self.size -=1
         ### END SOLUTION
 
     def __contains__(self, val):
